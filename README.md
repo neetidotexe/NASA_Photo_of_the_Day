@@ -1,6 +1,6 @@
 ## Introduction
 
-The goal of the assignment is to build a single-screen app that fetches NASA’s Astronomy Picture of the Day (APOD) and display it with some details
+The goal of the project is to build a single-screen app that fetches NASA’s Astronomy Picture of the Day (APOD) and display it with some details
 
 ## Visual Preview
 
@@ -24,8 +24,11 @@ Zoom the image |  Play option for videos
 	* A title that shows title of the image which can be multiline and thus scrollable
 	* A description at the bottom that shows description for the APOD
   	* A calendar button at the top left corner to select date and show APOD for that day
-  	* A zoom or play button to zoom image or play video for the the APOD forthat day if it is image or video respectively
- 
+	* If the currently selected day has a video then a play button appears, else if it is an image then a zoom button appears
+		+ On pressing the play button a hyperlink to the youtube video is activated
+		+ On pressing the zoom button photo description disappears and a X mark on Right Hand top appears. On pressing the X user goes back the view with image description
+
+
  ### Constraints
  - Minimum SDK Version is 21
 
@@ -37,10 +40,22 @@ Zoom the image |  Play option for videos
 - Used Kotlin
 - Used AndroidX 
 - Used MVVM arctitecture
-- Used ViewModel and LiveData
+- Used ViewModel & LiveData
 - Used Retrofit
 - Used RxJava
 - Used Glide
+
+## Icon Credits
+- Kiranshastry at https://www.flaticon.com/authors/kiranshastry
+- Pixel perfect at https://www.flaticon.com/authors/pixel-perfect
+- Freepik at https://www.flaticon.com/authors/freepik
+- Becris at https://www.flaticon.com/authors/becris
+
+## Future enhancements (Skipped in the interest of time)
+- Play button should be able to play the video inside the app itself
+- Handle mobile rotation appropriately
+- "No Internet" or "Internet interrupted" User Flow : ideally a residual image should be cached to show as default
+- Time Overlap between NASA's update timezone & other timezones
 
 
 
