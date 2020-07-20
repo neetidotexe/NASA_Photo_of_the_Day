@@ -23,8 +23,8 @@ Zoom the image |  Play option for videos
 	* A background screen that shows APOD image or APOD video thumbnail dependending on the media type for that day
 	* A title that shows title of the image which can be multiline and thus scrollable
 	* A description at the bottom that shows description for the APOD
-  * A calendar button at the top left corner to select date and show APOD for that day
-	* A zoom or play button to zoom image or play video for the the APOD forthat day if it is image or video respectively
+  	* A calendar button at the top left corner to select date and show APOD for that day
+  	* A zoom or play button to zoom image or play video for the the APOD forthat day if it is image or video respectively
  
  ### Constraints
  - Minimum SDK Version is 21
