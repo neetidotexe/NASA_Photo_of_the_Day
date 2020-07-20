@@ -1,4 +1,4 @@
-package com.example.nasaphotooftheday.service
+package com.example.nasaphotooftheday.source
 
 import com.example.nasaphotooftheday.database.entity.NasaPhoto
 import io.reactivex.Single
