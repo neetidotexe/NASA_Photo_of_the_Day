@@ -1,11 +1,15 @@
 package com.example.nasaphotooftheday.ui
 
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -23,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var cancelImage: ImageView
     lateinit var calendarButton: ImageView
     lateinit var dateSelected: String
+    lateinit var mediaUrl: String
+    var isMediaVideo: Boolean = false
+    var datePicker: DatePicker? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,11 +50,16 @@ class MainActivity : AppCompatActivity() {
 
         //zoom the image
         zoomImage.setOnClickListener {
-            titleText.visibility = View.INVISIBLE
-            descriptionText.visibility = View.INVISIBLE
-            zoomImage.visibility = View.INVISIBLE
-            calendarButton.visibility = View.INVISIBLE
-            cancelImage.visibility = View.VISIBLE
+            if(!isMediaVideo){
+                titleText.visibility = View.INVISIBLE
+                descriptionText.visibility = View.INVISIBLE
+                zoomImage.visibility = View.INVISIBLE
+                calendarButton.visibility = View.INVISIBLE
+                cancelImage.visibility = View.VISIBLE
+            }else{
+                openYoutubeLink(mediaUrl)
+            }
+
         }
 
         //come back from zoom
@@ -71,6 +83,8 @@ class MainActivity : AppCompatActivity() {
             titleText.text = it.title
 
             if (it.media_type == "image") {
+                zoomImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_zoom))
+                isMediaVideo = false
                 try {
                     Glide.with(this)
                         .load(it.hdurl)
@@ -78,6 +92,9 @@ class MainActivity : AppCompatActivity() {
                 } catch (ex: Exception) {
                 }
             } else {
+                zoomImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_play))
+                isMediaVideo = true
+                mediaUrl = it.url.toString()
                 try {
                     Glide.with(this)
                         .load(it.thumbnail_url)
@@ -108,6 +125,8 @@ class MainActivity : AppCompatActivity() {
                 val myDay = if (dayOfMonth < 10) "0$dayOfMonth" else "$dayOfMonth"
                 val myYear = "$year"
                 dateSelected = "$myYear-$myMonth-$myDay"
+                datePicker = DatePicker(this)
+                datePicker?.init(year, monthOfYear+1, dayOfMonth, null)
                 viewModel.fetchNasaPhotoOnDateDetails(dateSelected)
             },
             year1,
@@ -116,9 +135,37 @@ class MainActivity : AppCompatActivity() {
         )
 
         dpd.datePicker.minDate = 803260846000
+        dpd.datePicker.maxDate = System.currentTimeMillis()
+        datePicker?.let{
+            dpd.updateDate(it.year, it.month-1, it.dayOfMonth)
+        }
         dpd.show()
+    }
 
+    private fun openYoutubeLink(url: String){
+        val videoId = url.split("/").last().split("?").first()
+        val youtubeUrl = getString(R.string.youtube_link_start) + videoId
 
+        if(isAppInstalled("com.google.android.youtube")) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.setPackage("com.google.android.youtube")
+            startActivity(intent)
+        }
+        else{
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeUrl))
+            startActivity(intent)
+        }
+    }
+
+    private fun isAppInstalled(packageName: String): Boolean {
+        val pm = packageManager
+        try{
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+            return true
+        } catch (e: PackageManager.NameNotFoundException){
+        }
+        return false
     }
 }
 
